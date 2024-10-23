@@ -6,7 +6,6 @@ from scipy import fft
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from PIL import Image
-import matplotlib.pyplot as plt
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Lasso
