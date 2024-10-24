@@ -171,3 +171,5 @@ data/
 
 # Ignore mac os aux files
 .DS_Store
+
+secrets.toml
