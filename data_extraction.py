@@ -1,14 +1,13 @@
 import os
 
 from google.cloud import storage
+from google.oauth2 import service_account
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "micro-root-379316-a3e3cb0be532.json"
-
-# create a function to download a folder from google cloud bucket
+import streamlit as st
 
 
-def download_folder(bucket_name, prefix, local_folder):
-    client = storage.Client()
+def download_folder(bucket_name, prefix, local_folder, credentials):
+    client = storage.Client(credentials=credentials)
 
     bucket = client.get_bucket(bucket_name)
 
@@ -32,7 +31,23 @@ def download_folder(bucket_name, prefix, local_folder):
         print(f"Downloaded {blob.name} to {local_path}")
 
 
-bucket_name = "predict-maintenanceproject"
-prefix = "dashboard/"  # Folder in the bucket
-local_folder = "data/dashboard/"  # Folder locally
-download_folder(bucket_name, prefix, local_folder)
+def download_file(bucket_name, blob_name, local_path, credentials):
+    client = storage.Client(credentials=credentials)
+    bucket = client.get_bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+    blob.download_to_filename(local_path)
+    print(f"Downloaded {blob_name} to {local_path}")
+
+
+def check_and_download(bucket_name, blob_name, local_path, credentials):
+    if not os.path.exists(local_path):
+        download_file(bucket_name, blob_name, local_path, credentials)
+
+
+bucket_name = "data-cnc-predictive-maintenance"
+
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcs_connections"]
+)
