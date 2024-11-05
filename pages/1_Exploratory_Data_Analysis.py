@@ -170,6 +170,7 @@ with col2:
         xaxis_title="Frequency (Hz)",
         yaxis_title="Magnitude",
         template="plotly_white",
+        margin=dict(t=1, l=0, r=0, b=0),
     )
 
     # Display the Plotly figure in Streamlit
